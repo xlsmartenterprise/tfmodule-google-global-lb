@@ -12,9 +12,9 @@ output "backend_buckets" {
   description = "Map of backend bucket details"
   value = {
     for k, v in google_compute_backend_bucket.this : k => {
-      id         = v.id
-      self_link  = v.self_link
-      name       = v.name
+      id          = v.id
+      self_link   = v.self_link
+      name        = v.name
       bucket_name = v.bucket_name
     }
   }

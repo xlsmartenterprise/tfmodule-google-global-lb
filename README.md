@@ -9,6 +9,7 @@ Terraform module for creating and managing Google Cloud Global Load Balancers wi
 - **CDN Configuration**: Advanced CDN policies with caching controls and optimization
 - **URL Mapping**: Flexible URL routing with host rules and path matchers
 - **SSL Support**: HTTPS configuration with multiple SSL certificates
+- **SSL Policy Support**: Configure global SSL policies on target HTTPS proxies globally or per forwarding rule
 - **Static IP Management**: Automatic allocation and management of global static IPs
 - **Multiple Forwarding Rules**: Support for multiple frontend configurations
 - **Custom Headers**: Add custom response headers to backend buckets
@@ -26,6 +27,7 @@ module "global_lb" {
   url_map_name          = "my-url-map"
   backends              = "https://www.googleapis.com/compute/v1/projects/my-project/global/backendServices/my-backend"
   load_balancing_scheme = "EXTERNAL_MANAGED"
+  ssl_policy            = "projects/my-project-id/global/sslPolicies/my-ssl-policy"
 
   forwarding_rules = {
     main = {
@@ -156,7 +158,8 @@ module "global_lb_with_cdn" {
 | backend_buckets | `map(object)` | Map of backend buckets for Cloud Storage | `{}` | no |
 | host_rules | `list(object)` | List of host rules for URL map | `[]` | no |
 | path_matchers | `list(object)` | List of path matchers for URL map | `[]` | no |
-| forwarding_rules | `map(object)` | Map of forwarding rules with different IPs and SSL certificates | n/a | yes |
+| forwarding_rules | `map(object)` | Map of forwarding rules with different IPs, SSL certificates, and optional SSL policies | n/a | yes |
+| ssl_policy | `string` | Self-link, ID, or name of the global SSL policy to apply to target HTTPS proxies | `null` | no |
 
 ## Outputs
 

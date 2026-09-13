@@ -83,7 +83,7 @@ resource "google_compute_global_address" "this" {
 # Create Target HTTP Proxies
 resource "google_compute_target_http_proxy" "this" {
   for_each = var.backend_protocol == "HTTP" ? var.forwarding_rules : {}
-  
+
   project = var.project_id
   name    = each.value.proxy_name != null ? each.value.proxy_name : "${each.value.name}-proxy"
   url_map = google_compute_url_map.this.id
@@ -92,11 +92,12 @@ resource "google_compute_target_http_proxy" "this" {
 # Create Target HTTPS Proxies
 resource "google_compute_target_https_proxy" "this" {
   for_each = var.backend_protocol == "HTTPS" ? var.forwarding_rules : {}
-  
+
   project          = var.project_id
   name             = each.value.proxy_name != null ? each.value.proxy_name : "${each.value.name}-proxy"
   url_map          = google_compute_url_map.this.id
   ssl_certificates = each.value.ssl_certificates
+  ssl_policy       = each.value.ssl_policy != null ? each.value.ssl_policy : var.ssl_policy
 }
 
 # Create Global Forwarding Rules
@@ -109,13 +110,13 @@ resource "google_compute_global_forwarding_rule" "this" {
   load_balancing_scheme = var.load_balancing_scheme
   port_range            = each.value.port_range
   ip_address            = google_compute_global_address.this[each.key].address
-  
+
   target = var.backend_protocol == "HTTP" ? (
     google_compute_target_http_proxy.this[each.key].id
-  ) : (
+    ) : (
     google_compute_target_https_proxy.this[each.key].id
   )
-  
+
   depends_on = [
     google_compute_target_http_proxy.this,
     google_compute_target_https_proxy.this,

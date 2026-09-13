@@ -82,12 +82,19 @@ variable "path_matchers" {
 variable "forwarding_rules" {
   description = "Map of forwarding rules with different IPs and SSL certificates"
   type = map(object({
-    name              = string
-    ip_name           = optional(string)
-    ip_address        = optional(string)
-    port_range        = string
-    ssl_certificates  = list(string)
-    ip_version        = optional(string, "IPV4")
-    proxy_name        = optional(string)
+    name             = string
+    ip_name          = optional(string)
+    ip_address       = optional(string)
+    port_range       = string
+    ssl_certificates = list(string)
+    ip_version       = optional(string, "IPV4")
+    proxy_name       = optional(string)
+    ssl_policy       = optional(string)
   }))
+}
+
+variable "ssl_policy" {
+  description = "Self-link, ID, or name of the global SSL policy to apply to target HTTPS proxies"
+  type        = string
+  default     = null
 }

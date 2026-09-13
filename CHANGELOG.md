@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.0.1] - 2026-09-13
+
+### Added
+- Global SSL Policy support for target HTTPS proxies via `ssl_policy` module input variable
+- Per-forwarding-rule SSL policy override support in `forwarding_rules` configuration (`ssl_policy = optional(string)`)
+- Documentation and example for HTTPS load balancer with SSL policy in `README.md`
+
 ## [v1.0.0] - 2025-11-25
 
 ### Added
