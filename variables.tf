@@ -98,3 +98,9 @@ variable "ssl_policy" {
   type        = string
   default     = null
 }
+
+variable "enable_http_to_https_redirect" {
+  description = "Whether to create an automatic port 80 forwarding rule and URL map redirecting HTTP traffic to HTTPS"
+  type        = bool
+  default     = false
+}

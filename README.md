@@ -13,6 +13,7 @@ Terraform module for creating and managing Google Cloud Global Load Balancers wi
 - **Static IP Management**: Automatic allocation and management of global static IPs
 - **Multiple Forwarding Rules**: Support for multiple frontend configurations
 - **Custom Headers**: Add custom response headers to backend buckets
+- **HTTP to HTTPS Redirect**: Automatic HTTP (port 80) to HTTPS (port 443) traffic redirection
 
 ## Usage
 
@@ -160,6 +161,7 @@ module "global_lb_with_cdn" {
 | path_matchers | `list(object)` | List of path matchers for URL map | `[]` | no |
 | forwarding_rules | `map(object)` | Map of forwarding rules with different IPs, SSL certificates, and optional SSL policies | n/a | yes |
 | ssl_policy | `string` | Self-link, ID, or name of the global SSL policy to apply to target HTTPS proxies | `null` | no |
+| enable_http_to_https_redirect | `bool` | Whether to create an automatic port 80 forwarding rule and URL map redirecting HTTP traffic to HTTPS | `false` | no |
 
 ## Outputs
 

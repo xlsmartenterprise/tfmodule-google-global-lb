@@ -123,3 +123,40 @@ resource "google_compute_global_forwarding_rule" "this" {
     google_compute_global_address.this
   ]
 }
+
+# HTTP to HTTPS Redirect Resources
+resource "google_compute_url_map" "http_redirect" {
+  count   = var.enable_http_to_https_redirect ? 1 : 0
+  project = var.project_id
+  name    = "${var.name}-http-redirect"
+
+  default_url_redirect {
+    https_redirect         = true
+    redirect_response_code = "MOVED_PERMANENTLY_DEFAULT"
+    strip_query            = false
+  }
+}
+
+resource "google_compute_target_http_proxy" "http_redirect" {
+  count   = var.enable_http_to_https_redirect ? 1 : 0
+  project = var.project_id
+  name    = "${var.name}-http-redirect-proxy"
+  url_map = google_compute_url_map.http_redirect[0].self_link
+}
+
+resource "google_compute_global_forwarding_rule" "http_redirect" {
+  for_each = var.enable_http_to_https_redirect && var.backend_protocol == "HTTPS" ? var.forwarding_rules : {}
+
+  project               = var.project_id
+  name                  = "${each.value.name}-http-redirect"
+  ip_protocol           = "TCP"
+  load_balancing_scheme = var.load_balancing_scheme
+  port_range            = "80"
+  ip_address            = google_compute_global_address.this[each.key].address
+  target                = google_compute_target_http_proxy.http_redirect[0].self_link
+
+  depends_on = [
+    google_compute_target_http_proxy.http_redirect,
+    google_compute_global_address.this
+  ]
+}
